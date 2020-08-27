@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace BeehiveManagementSystem2._0
 {
-    class Queen
+    class Queen:Bee
     {
+
         private Worker[] workers;
         private int shiftNumber = 0;
 
-        public Queen(Worker[] workers)
+        public Queen(Worker[] workers,double weightMg)
+            :base(weightMg)
         {
             this.workers = workers;
         }
@@ -29,14 +31,13 @@ namespace BeehiveManagementSystem2._0
 
         public string WorkTheNextShift()
         {
+            double totalConsumption = HoneyConsumptionRate();
+
             shiftNumber++;
             string report = $"Report for shift {shiftNumber}\r\n";
             for (int i = 0; i < workers.Length; i++)
             {
-                //if (string.IsNullOrEmpty(workers[i].CurrentJob))
-                //    report += $"Worker #{i+1} is not working\r\n";
-                //else
-                //{
+               totalConsumption += workers[i].HoneyConsumptionRate();
                 if (workers[i].DidYouFinish())
                     report += $"Worker #{i + 1} finished the job\r\n";
                 if (string.IsNullOrEmpty(workers[i].CurrentJob))
@@ -49,6 +50,9 @@ namespace BeehiveManagementSystem2._0
                         report += $"Worker #{i + 1} will be done with {workers[i].CurrentJob} after this shift\r\n";
                 }
             }
+            
+            report += $"Total honey xonsumed for the shift: {totalConsumption} units";
+
             return report;
 
         }
